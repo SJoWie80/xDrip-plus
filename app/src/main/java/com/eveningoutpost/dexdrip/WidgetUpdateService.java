@@ -23,7 +23,9 @@ public class WidgetUpdateService extends Service {
     {
         try {
             Context context = xdrip.getAppContext();
-            if (AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, xDripWidget.class)).length > 0) {
+            if ((AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, xDripWidget.class)).length > 0) ||
+               (AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, WearableWidget1.class)).length > 0))
+            {
                 context.startService(new Intent(context, WidgetUpdateService.class));
             }
         } catch (Exception e)
@@ -108,6 +110,12 @@ public class WidgetUpdateService extends Service {
         int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), xDripWidget.class));
         Log.d(TAG, "Updating " + ids.length + " widgets");
         Intent intent = new Intent(this,xDripWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
+        ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), WearableWidget1.class));
+        Log.d(TAG, "Updating " + ids.length + " widgets");
+        intent = new Intent(this,WearableWidget1.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
         sendBroadcast(intent);
